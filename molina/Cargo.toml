@@ -1,0 +1,16 @@
+[package]
+name = "molina"
+version = "0.0.1"
+edition = "2021"
+description = " Research Assistant Powered by Llama3.1 8B Instruct"
+
+[dependencies]
+serde = { version = "1.0.203", features = ["derive"] }
+
+rand = {version="0.8.5"}
+rand_distr = "0.4.3"
+llama_cpp_rs = { git = "https://github.com/tbogdala/rust-llama.cpp", version = "0.5.3" }
+
+[lints]
+workspace = true
+

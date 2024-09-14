@@ -1,0 +1,12 @@
+[workspace]
+
+members = [
+  "molina",
+]
+
+resolver = "2"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+unused_extern_crates = "warn"
+
