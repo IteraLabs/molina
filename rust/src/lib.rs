@@ -24,7 +24,6 @@ pub mod inference;
 /// Structs and logic for Events, Custom Error Types, Logs
 pub mod messages;
 
-/// testing docs.rs element for #[pyfunction]
 #[pyfunction]
 fn read_pdf(_file_path: &str) -> PyResult<()> {
     let read_result = parse::pdf_generate();
