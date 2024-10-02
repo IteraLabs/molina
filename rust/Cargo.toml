@@ -2,7 +2,14 @@
 name = "molina"
 version = "0.0.1"
 edition = "2021"
-description = " Research Assistant "
+description = "Rust/Python Synthetic Integration for an agentic-LLM approach to build a research agents for local knowledge representation"
+
+authors = ["IteraLabs.ai <contact@iteralabs.ai>"]
+license = "Apache-2.0"
+keywords = ["machine-learning", "framework", "nlp", "llm", "rag"]
+categories = ["nlp", "development-tools", "simulation"]
+documentation = "https://docs.rs/molina/"
+repository = "https://github.com/iteralabs/molina"
 
 [dependencies]
 pyo3 = { version = "0.15", features = ["extension-module"] }
