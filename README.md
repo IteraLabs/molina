@@ -1,40 +1,31 @@
 # molina
-An LLM-based research assistant project.
 
-# tech stack
+Welcome to the `molina` project, a synthetic research agent for local knowledge representation.
 
-- Python, Docker
-- torch, torchtune
-- Llama3
-- pdfplumber
+Notice here the absence of the terms `Artificial` and `Intelligence`, this is deliverate.
+This is not an `artificially sweetened` project, is not a claim to be the panacea, neither 
+the $n-th$ attempt to solve general let alone narrow intelligence because this is definitely
+not a claim of something being intelligent. 
 
-# techniques
+What is this then ?, a tool, built with an agentic approach, for you to interact with by the 
+act of formulating research-related questions, which will get you responses using *only* the 
+academic papers you provide as the *knowledge base*.
 
-- Named Entity Recognition (NER): To identify key entities (SpaCy).
-- Relation Extraction (RE): To extract relationship between entities (SpaCy).
+The name is in honor to THE greatest Mexican researcher of all times, [Mario Molina (1943-2020)](https://es.wikipedia.org/wiki/Mario_Molina_(químico)).
 
-- Latent Dirichlet Allocation: To identify topics.
-- Text extraction: to extract text from PDFs (pdfPlumber).
-- Prompt Engineering: Prompt templates (llama-3).
+## Problems
 
-# content
-- Academic papers, books
-- Metadata
+Challenges of the use of Large Language Models (LLMs), as an academic research assistant, are:  
 
-# Blocks
+- Hallucination.
+- Lack of domain-specific knowledge.
+- Outdated information.
+- Bias in Training Data.
+- Interpretability and Response Attribution.
 
-1. Content ETL
-    1. Extract from PDF
-    2. Transform it with NERRE 
-    3. Load the transformed content into a metadata catalaog.
+## Project Structure
 
-# Install dependencies
-
-```shell
-python -m spacy download en_core_web_trf
-```
-
-# References
-
-- https://universaldependencies.org/u/pos/
+- Python
+- Rust
+- Models 
 
