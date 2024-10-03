@@ -1,3 +1,4 @@
+/*
 use llama_cpp_rs::{
     options::{ModelOptions, PredictOptions},
     LLama,
@@ -71,3 +72,4 @@ fn main() {
     // the Result object returned.
     let _result = llm_model.predict(prompt.to_string(), &predict_options);
 }
+*/

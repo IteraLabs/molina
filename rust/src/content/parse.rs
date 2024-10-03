@@ -9,9 +9,12 @@ use std::path::{Path, PathBuf};
 use std::time::Instant;
 
 #[derive(Debug, Deserialize, Serialize)]
-struct PdfText {
-    text: BTreeMap<u32, Vec<String>>, // Key is page number
-    errors: Vec<String>,
+
+pub struct PdfText {
+    // Keys are page numbers
+    pub text: BTreeMap<u32, Vec<String>>,
+    // Collection of errors
+    pub errors: Vec<String>,
 }
 
 static IGNORE: &[&str] = &[
@@ -64,11 +67,12 @@ fn load_pdf<P: AsRef<Path>>(path: P) -> Result<Document, Error> {
         .map_err(|e| Error::new(ErrorKind::Other, e.to_string()))
 }
 
-fn get_pdf_text(doc: &Document) -> Result<PdfText, Error> {
+pub fn get_pdf_text(doc: &Document) -> Result<PdfText, Error> {
     let mut pdf_text: PdfText = PdfText {
         text: BTreeMap::new(),
         errors: Vec::new(),
     };
+
     let pages: Vec<Result<(u32, Vec<String>), Error>> = doc
         .get_pages()
         .into_iter()
@@ -103,49 +107,84 @@ fn get_pdf_text(doc: &Document) -> Result<PdfText, Error> {
     Ok(pdf_text)
 }
 
-fn pdf2text<P: AsRef<Path> + Debug>(
-    path: P,
-    output: P,
-    pretty: bool,
-    password: &str,
-) -> Result<(), Error> {
-    println!("Load {path:?}");
+pub fn get_content<P>(
+    input_path: P,
+    file_pass: &str,
+) -> Result<PdfText, std::io::Error>
+where
+    P: AsRef<Path> + Debug,
+{
+    let mut doc_content = load_pdf(&input_path)?;
+
+    if doc_content.is_encrypted() {
+        doc_content
+            .decrypt(file_pass)
+            .map_err(|_err| Error::new(ErrorKind::InvalidInput, "Failed to decrypt file"))?;
+    }
+
+    let doc_text = get_pdf_text(&doc_content)?;
+
+    if doc_text.errors.is_empty() {
+        println!("Text: {input_path:?} had 0 errors");
+    } else {
+        eprintln!("Text: {input_path:?} has {} errors:", doc_text.errors.len());
+        for error in &doc_text.errors[..10] {
+            eprintln!("{error:?}");
+        }
+    }
+
+
+    Ok(doc_text)
+}
+
+fn pdf2text<P>(path: P, output: P, pretty: bool, password: &str) -> Result<(), Error>
+where
+    P: AsRef<Path> + Debug,
+{
+    println!("Loading the file: {path:?}");
+
     let mut doc = load_pdf(&path)?;
+
     if doc.is_encrypted() {
         doc.decrypt(password)
             .map_err(|_err| Error::new(ErrorKind::InvalidInput, "Failed to decrypt"))?;
     }
+
     let text = get_pdf_text(&doc)?;
+
     if !text.errors.is_empty() {
         eprintln!("{path:?} has {} errors:", text.errors.len());
         for error in &text.errors[..10] {
             eprintln!("{error:?}");
         }
     }
+
     let data = match pretty {
         true => serde_json::to_string_pretty(&text).unwrap(),
         false => serde_json::to_string(&text).unwrap(),
     };
+
     println!("Write {output:?}");
     let mut f = File::create(output)?;
     f.write_all(data.as_bytes())?;
+
     Ok(())
 }
 
-pub fn pdf_generate() -> Result<(), Error> {
+pub fn pdf_generate(in_file: &str, out_file: &str) -> Result<(), Error> {
     let start_time = Instant::now();
-    let pdf_path =
-        PathBuf::from("knowledge/case_1/Advances-Prospect-Kahneman-Tversky-1992.pdf".to_string());
-    let mut output = PathBuf::from("knowledge/case_1/file_texted.pdf");
+    let pdf_path = PathBuf::from(in_file.to_string());
+    println!("pdf_path contents: {:?}", pdf_path);
+
+    let mut output = PathBuf::from(out_file.to_string());
     output.set_extension("text");
 
     let pretty = true;
     let passw = "abc123";
-    pdf2text(&pdf_path, &output, pretty, passw)?;
-    println!(
-        "Executed after {:.1} seconds.",
-        Instant::now().duration_since(start_time).as_secs_f64()
-    );
 
+    pdf2text(&pdf_path, &output, pretty, passw)?;
+
+    let final_time = Instant::now().duration_since(start_time).as_secs_f64();
+    println!("Executed after {:.1} seconds.", final_time);
     Ok(())
 }

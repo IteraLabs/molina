@@ -7,15 +7,22 @@ description = "Rust/Python Synthetic Integration for an agentic-LLM approach to 
 authors = ["IteraLabs.ai <contact@iteralabs.ai>"]
 license = "Apache-2.0"
 keywords = ["machine-learning", "framework", "nlp", "llm", "rag"]
-categories = ["nlp", "development-tools", "simulation"]
+categories = ["development-tools", "simulation"]
 documentation = "https://docs.rs/molina/"
 repository = "https://github.com/iteralabs/molina"
 
 [dependencies]
 pyo3 = { version = "0.15", features = ["extension-module"] }
-llama_cpp_rs = { git = "https://github.com/tbogdala/rust-llama.cpp", version = "0.5.3" }
 lopdf = { version = "0.34.0", default-features = true }
 rayon = { version = "1.6"}
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+
+[lib]
+name = "molina"
+crate-type = ["lib"]
+test = true
+doctest = true
+
+include = ["~/git/iteralabs/molina/knowledge/case_1/"]
 

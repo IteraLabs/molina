@@ -19,4 +19,4 @@ knowledge/
 
 .env/
 *.cpython-311-darwin.so
-
+__pycache__/
