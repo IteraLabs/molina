@@ -18,3 +18,11 @@ rayon = { version = "1.6"}
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 
+[lib]
+name = "molina"
+crate-type = ["lib"]
+test = true
+doctest = true
+
+include = ["~/git/iteralabs/molina/knowledge/case_1/"]
+
