@@ -1,7 +1,28 @@
-
 [build-system]
 requires = ["maturin>=0.12"]
 build-backend = "maturin"
 
 [tool.maturin]
 python-source = "python"
+exclude = [".git/**", ".github/**"]
+
+ 
+# [project]
+# name = "molina"
+# dependencies = ["toml"]
+# requires-python = ">=3.10"
+# keywords = ["llm", "rust"]
+# classifier = [
+#    "Development Status :: 2 - Pre-Alpha",
+#    "Intended Audience :: Developers",
+#    "License :: OSI Approved :: Apache Software License",
+#    "License :: OSI Approved",
+#    "Operating System :: MacOS",
+#    "Operating System :: Microsoft :: Windows",
+#    "Operating System :: POSIX :: Linux",
+#    "Programming Language :: Python :: 3",
+#    "Programming Language :: Python :: 3.10",
+#    "Programming Language :: Python",
+#    "Programming Language :: Rust",
+#]
+

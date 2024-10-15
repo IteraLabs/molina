@@ -23,9 +23,13 @@ Challenges of the use of Large Language Models (LLMs), as an academic research a
 - Bias in Training Data.
 - Interpretability and Response Attribution.
 
-## Project Structure
+## General structure
+- pre-retrieval
+- retrieval
+- post-retrieval
+- generation
 
-- Python
-- Rust
-- Models 
+## Copyright disclaimer
 
+The purpose of this tool is not to promote or condone the unauthorized downloading or use of copyrighted materials.
+All users of this should only use legally obtained documents, self-archive documents and materials in their projects.

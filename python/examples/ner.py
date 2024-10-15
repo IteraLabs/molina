@@ -1,16 +1,7 @@
-import spacy
-from molina import get_content
+from molina import read_pdf
 
-# Load the English NLP model
-nlp = spacy.load("en_core_web_sm")
-# Sample text
-text = "Apple is looking at buying U.K. startup for $1 billion. Tim Cook is the CEO of Apple."
+file_in = "/Users/franciscome/git/iteralabs/molina/knowledge/behavioral_economics/Advances-Prospect-Kahneman-Tversky-1992.pdf"
+file_out = "/Users/franciscome/git/iteralabs/molina/example_1.pdf"
 
-# Process the text with spaCy
-doc = nlp(text)
+text_1 = read_pdf(file_in, file_out)
 
-# Print named entities
-for ent in doc.ents:
-    print(f"Text: {ent.text}, Label: {ent.label_}")
-
-get_content("input_file_1.pdf")

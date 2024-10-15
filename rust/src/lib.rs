@@ -9,7 +9,7 @@
 //! - **Rust**: NLP tasks, Prompting, Routing, Content parsing.
 //!
 
-use crate::content::parse;
+// Bridge functions across Python and Rust
 use pyo3::prelude::*;
 
 /// Content parsing for PDFs and other tools.
@@ -24,31 +24,41 @@ pub mod inference;
 /// Structs and logic for Events, Custom Error Types, Logs
 pub mod messages;
 
+// ### extract_content
+// Extract's the PDFs content as indicated with the params.
 #[pyfunction]
-fn read_pdf(_file_path: &str) -> PyResult<()> {
-    let in_file_path = "knowledge/case_1/file_1.pdf";
-    let out_file_path = "knowledge/case_1/file_1.txt";
-    let read_result = parse::pdf_generate(in_file_path, out_file_path);
-    println!("temporal result is this {:?}", read_result);
+fn extract_content(_input_path: &str) -> PyResult<()> {
+    // distinguish the content type
+    // match action according to an Enum::variant
+
+    // input the file path and name
+    // load contents with lopdf function filtered
+
+    // output a json-like struct inside a string
+    // transform the contents into a JSON-like structure
+
     Ok(())
 }
 
-// PdfText, std::io:Error 
+// fn extract_content(input_path: &str) -> PyResult<Document> {
+//    let r_content = match content::extract::extract_pdf(input_path) {
+//        Ok(v) => v,
+//        Err(e) => return Err(PyIOError::new_err(format!("Error occurred: {}", e))),
+//    };
+//    Ok(r_content)
+//}
 
+// ### separate_content
+// sepparation into chunks with size as selected
+// {sub-character, character, sentence, paragraph, section, page}
 #[pyfunction]
-fn get_content(input_path: &str, file_pass: &str, pretty_json: bool) -> PyResult<String, PyErr> {
-    let get_content = parse::get_content(input_path, file_pass);
-
-    // Return as JSON to have the result universally shareable.
-    let r_json = serde_json::to_string_pretty(&get_content.unwrap());
-    r_json
+fn split_content() -> PyResult<()> {
+    Ok(())
 }
 
 #[pymodule]
 fn molina(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(read_pdf, m)?)?;
-    m.add_function(wrap_pyfunction!(get_content, m)?)?;
-
+    m.add_function(wrap_pyfunction!(extract_content, m)?)?;
+    m.add_function(wrap_pyfunction!(split_content, m)?)?;
     Ok(())
 }
-

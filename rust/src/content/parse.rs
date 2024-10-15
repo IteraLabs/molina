@@ -42,11 +42,14 @@ static IGNORE: &[&str] = &[
     "Annot",
 ];
 
-fn filter_func(object_id: (u32, u16), object: &mut Object) -> Option<((u32, u16), Object)> {
+fn filter_func(
+    object_id: (u32, u16),
+    object: &mut Object,
+) -> Option<((u32, u16), Object)> {
     if IGNORE.contains(&object.type_name().unwrap_or_default()) {
         return None;
     }
-    if let Ok(d) = object.as_dict_mut() {
+ if let Ok(d) = object.as_dict_mut() {
         d.remove(b"Producer");
         d.remove(b"ModDate");
         d.remove(b"Creator");
@@ -117,9 +120,12 @@ where
     let mut doc_content = load_pdf(&input_path)?;
 
     if doc_content.is_encrypted() {
-        doc_content
-            .decrypt(file_pass)
-            .map_err(|_err| Error::new(ErrorKind::InvalidInput, "Failed to decrypt file"))?;
+        doc_content.decrypt(file_pass).map_err(|_err| {
+            Error::new(
+                ErrorKind::InvalidInput,
+                "Failed to decrypt file",
+            )
+        })?;
     }
 
     let doc_text = get_pdf_text(&doc_content)?;
@@ -127,17 +133,24 @@ where
     if doc_text.errors.is_empty() {
         println!("Text: {input_path:?} had 0 errors");
     } else {
-        eprintln!("Text: {input_path:?} has {} errors:", doc_text.errors.len());
+        eprintln!(
+            "Text: {input_path:?} has {} errors:",
+            doc_text.errors.len()
+        );
         for error in &doc_text.errors[..10] {
             eprintln!("{error:?}");
         }
     }
 
-
     Ok(doc_text)
 }
 
-fn pdf2text<P>(path: P, output: P, pretty: bool, password: &str) -> Result<(), Error>
+fn pdf2text<P>(
+    path: P,
+    output: P,
+    pretty: bool,
+    password: &str,
+) -> Result<(), Error>
 where
     P: AsRef<Path> + Debug,
 {
@@ -146,14 +159,21 @@ where
     let mut doc = load_pdf(&path)?;
 
     if doc.is_encrypted() {
-        doc.decrypt(password)
-            .map_err(|_err| Error::new(ErrorKind::InvalidInput, "Failed to decrypt"))?;
+        doc.decrypt(password).map_err(|_err| {
+            Error::new(
+                ErrorKind::InvalidInput,
+                "Failed to decrypt",
+            )
+        })?;
     }
 
     let text = get_pdf_text(&doc)?;
 
     if !text.errors.is_empty() {
-        eprintln!("{path:?} has {} errors:", text.errors.len());
+        eprintln!(
+            "{path:?} has {} errors:",
+            text.errors.len()
+        );
         for error in &text.errors[..10] {
             eprintln!("{error:?}");
         }
@@ -185,6 +205,9 @@ pub fn pdf_generate(in_file: &str, out_file: &str) -> Result<(), Error> {
     pdf2text(&pdf_path, &output, pretty, passw)?;
 
     let final_time = Instant::now().duration_since(start_time).as_secs_f64();
-    println!("Executed after {:.1} seconds.", final_time);
+    println!(
+        "Executed after {:.1} seconds.",
+        final_time
+    );
     Ok(())
 }

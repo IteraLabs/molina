@@ -1,0 +1,28 @@
+  
+  // in case of being PDF as selected source
+  match input_source {
+
+      // For the case of a PDF File
+      Source::Pdf =>  {
+          
+          // For the case of a correct response
+          match content::load::load_pdf(input_path) {
+              
+              Ok(_content) => {
+                  println!("Success in loading content");
+
+              },
+
+              Err(e) => {
+                  println!("Error encountered");
+
+                  return Err(PyErr::new::<pyo3::exceptions::PyIOError, _>(
+                      format!("Failed to load PDF: {}", e)));
+              
+              }
+          }
+      }
+  };
+
+  Ok(())
+
