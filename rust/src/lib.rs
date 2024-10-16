@@ -24,35 +24,38 @@ pub mod inference;
 /// Structs and logic for Events, Custom Error Types, Logs
 pub mod messages;
 
+// use lopdf::Document;
 // ### extract_content
 // Extract's the PDFs content as indicated with the params.
 #[pyfunction]
-fn extract_content(_input_path: &str) -> PyResult<()> {
-    // distinguish the content type
-    // match action according to an Enum::variant
+fn extract_content(input_file: &str) -> PyResult<String> {
+    
+   // Attempt to extract text
+    let text = content::extract::extract_text(input_file)
+        .map_err(|e| {
+            match e {
+                messages::errors::ContentError::ContentNotFound(msg) => {
+                // Raise a FileNotFoundError for ContentNotFound errors
+                pyo3::exceptions::PyFileNotFoundError::new_err(msg)
+                }
+                messages::errors::ContentError::UnsuccessfulExtraction(msg) => {
+                // Raise a RuntimeError for UnsuccessfulExtraction errors
+                pyo3::exceptions::PyRuntimeError::new_err(msg)
+                }
+            }
+        })?;
 
-    // input the file path and name
-    // load contents with lopdf function filtered
+    // Return the extracted text
+    Ok(text)
 
-    // output a json-like struct inside a string
-    // transform the contents into a JSON-like structure
-
-    Ok(())
 }
-
-// fn extract_content(input_path: &str) -> PyResult<Document> {
-//    let r_content = match content::extract::extract_pdf(input_path) {
-//        Ok(v) => v,
-//        Err(e) => return Err(PyIOError::new_err(format!("Error occurred: {}", e))),
-//    };
-//    Ok(r_content)
-//}
 
 // ### separate_content
 // sepparation into chunks with size as selected
 // {sub-character, character, sentence, paragraph, section, page}
 #[pyfunction]
 fn split_content() -> PyResult<()> {
+    // println!("split_content call");
     Ok(())
 }
 
@@ -62,3 +65,4 @@ fn molina(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(split_content, m)?)?;
     Ok(())
 }
+

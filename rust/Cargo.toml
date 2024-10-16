@@ -24,8 +24,6 @@ name = "molina"
 crate-type = ["cdylib"]
 test = true
 doctest = true
-
-# include = ["~/git/iteralabs/molina/knowledge/case_1/"]
 include = ["~/git/iteralabs/molina",
            "~/git/iteralabs/molina/rust",
            "~/git/iteralabs/molina/rust/examples"]

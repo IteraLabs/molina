@@ -4,9 +4,9 @@ build-backend = "maturin"
 
 [tool.maturin]
 python-source = "python"
+module-name = "molina"
 exclude = [".git/**", ".github/**"]
 
- 
 # [project]
 # name = "molina"
 # dependencies = ["toml"]

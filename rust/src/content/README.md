@@ -2,11 +2,10 @@
 
 ## Functionality
 
-Load the content from a 
+Extraction, pre-formatting, tokenization, splitting, injectintg and testing injection of content.
 
-### load_content
-
-Extract's the PDFs content, could be filtered if such info for the parameter is included.
+### extract_content
+Extract's the PDFs content, either raw, or, filtered if such info for the parameter is included.
 
 ### split_content
 sepparation into chunks, accordingly to the indicated level, to be selected from \[sub-character, character, sentence, paragraph, section, page\].
