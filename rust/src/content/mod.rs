@@ -1,1 +1,6 @@
-pub mod parse;
+//!
+//! Extractor of content
+//!
+pub mod extract;
+pub mod filter;
+pub mod process;

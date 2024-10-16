@@ -1,0 +1,40 @@
+{
+  "publisher": {
+      "elsevier": {
+          "journal" : {
+              "jifmim": {
+                  "abv": "jifmim",
+                  "name": "Journal of International Financial Markets, Institutions and Money",
+                  "isOpenAccess": false, 
+                  "hasOpenAccess": true,
+              },
+              "pss": {
+                  "abv": "pss",
+                  "name": "Planetary and Space Science",
+                  "isOpenAccess": false,
+                  "hasOpenAccess": true,
+              },
+          },
+      },
+      "frontiers": {
+          "journal": {
+              "fb": {
+                  "abv": "fb",
+                  "name": "Frontiers in Blockchain",
+                  "isOpenAccess": true,
+                  "HasOpenAccess": true,
+              },
+          },
+      },
+      "icml": {
+          "conference": {
+              "icml": {
+                  "abv": "icml",
+                  "name": "International Conference on Artificial Intelligence",
+                  "isOpenAccess": true,
+                  "hasOpenAccess": true,
+              }
+          }
+      }
+  }
+}
