@@ -1,12 +1,10 @@
-//! 
+//!
 //! Filtering functions
 //!
 
 use lopdf::Object;
 
-pub static SIMPLE_FILTER: &[&str] = &[
-    "Length",
-];
+pub static SIMPLE_FILTER: &[&str] = &["Length"];
 
 pub static DEFAULT_FILTER: &[&str] = &[
     "Length",
@@ -40,7 +38,6 @@ pub fn filter_content(
     object_id: (u32, u16),
     object: &mut Object,
 ) -> Option<((u32, u16), Object)> {
-    
     if DEFAULT_FILTER.contains(&object.type_name().unwrap_or_default()) {
         return None;
     }
@@ -61,4 +58,3 @@ pub fn filter_content(
     }
     Some((object_id, object.to_owned()))
 }
-

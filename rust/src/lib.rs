@@ -9,6 +9,8 @@
 //! - **Rust**: NLP tasks, Prompting, Routing, Content parsing.
 //!
 
+use std::collections::BTreeMap;
+
 // Bridge functions across Python and Rust
 use pyo3::prelude::*;
 
@@ -28,26 +30,23 @@ pub mod messages;
 // ### extract_content
 // Extract's the PDFs content as indicated with the params.
 #[pyfunction]
-fn extract_content(input_file: &str) -> PyResult<String> {
-    
-   // Attempt to extract text
-    let text = content::extract::extract_text(input_file)
-        .map_err(|e| {
-            match e {
-                messages::errors::ContentError::ContentNotFound(msg) => {
+fn extract_content(input_file: &str) -> PyResult<BTreeMap<u32, String>> {
+    // Attempt to extract text
+    let text = content::extract::extract_text(input_file).map_err(|e| {
+        match e {
+            messages::errors::ContentError::ContentNotFound(msg) => {
                 // Raise a FileNotFoundError for ContentNotFound errors
                 pyo3::exceptions::PyFileNotFoundError::new_err(msg)
-                }
-                messages::errors::ContentError::UnsuccessfulExtraction(msg) => {
-                // Raise a RuntimeError for UnsuccessfulExtraction errors
-                pyo3::exceptions::PyRuntimeError::new_err(msg)
-                }
             }
-        })?;
+            messages::errors::ContentError::UnsuccessfulExtraction(msg) => {
+                // Raise a RuntimeError for UnsuccessfulExtraction error
+                pyo3::exceptions::PyRuntimeError::new_err(msg)
+            }
+        }
+    })?;
 
     // Return the extracted text
     Ok(text)
-
 }
 
 // ### separate_content
@@ -65,4 +64,3 @@ fn molina(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(split_content, m)?)?;
     Ok(())
 }
-
