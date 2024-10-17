@@ -7,4 +7,3 @@ pub enum ContentError {
     #[error("Unsuccessful extraction process: {0}")]
     UnsuccessfulExtraction(String),
 }
-

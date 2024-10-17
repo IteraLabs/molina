@@ -9,7 +9,7 @@ exclude = [".git/**", ".github/**"]
 
 # [project]
 # name = "molina"
-# dependencies = ["toml"]
+# dependencies = ["toml", "transformers", "SentecePiece", "protobuf", "torch"]
 # requires-python = ">=3.10"
 # keywords = ["llm", "rust"]
 # classifier = [
