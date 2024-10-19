@@ -14,7 +14,6 @@
 //! Concrete Strategies: string, table, image, latex, code
 //!
 
-// use crate::content::filter::filter_content;
 use crate::content::{filter, process};
 use crate::messages::errors;
 use lopdf::Document;
@@ -28,7 +27,7 @@ pub fn extract_text<P: AsRef<Path>>(
     path: P,
 ) -> Result<BTreeMap<u32, String>, errors::ContentError> {
     // Attempt to Load Document
-    let r_load = Document::load_filtered(path, filter::filter_content).map_err(|_| {
+    let mut r_load = Document::load_filtered(path, filter::filter_content).map_err(|_| {
         errors::ContentError::ContentNotFound(String::from(
             "During Attempt to Load Document",
         ))
@@ -38,13 +37,21 @@ pub fn extract_text<P: AsRef<Path>>(
     let mut b_extract = BTreeMap::new();
     let size_document = r_load.get_pages().len() as u32;
 
+    // Change documents metadata
+    //r_load.change_producer("pdfTeX-1.40.20");
+
     for i in 1..=size_document {
+        
         let i_text = r_load.extract_text(&vec![i]).map_err(|_| {
-            errors::ContentError::UnsuccessfulExtraction(String::from(
-                "During Attempt to Extract Text",
-            ))
+            
+            // println!("{:?}", r_load.catalog());
+
+            let err_message:String = String::from("Error during extraction").to_owned();
+            let full_err_message = err_message.clone();
+
+            errors::ContentError::UnsuccessfulExtraction(
+            full_err_message)
         });
-        // pre-process extracted text before inserting into BTreeMap
 
         // to lower case
         let r0_text = process::preprocess_text(&i_text?);

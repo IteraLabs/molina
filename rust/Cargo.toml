@@ -24,6 +24,6 @@ llm_models = "0.0.1"
 
 [lib]
 name = "molina"
-crate-type = ["lib"]
+crate-type = ["cdylib"]
 test = true
 doctest = true

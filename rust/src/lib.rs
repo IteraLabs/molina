@@ -26,7 +26,6 @@ pub mod inference;
 /// Structs and logic for Events, Custom Error Types, Logs
 pub mod messages;
 
-// use lopdf::Document;
 // ### extract_content
 // Extract's the PDFs content as indicated with the params.
 #[pyfunction]
@@ -49,18 +48,30 @@ fn extract_content(input_file: &str) -> PyResult<BTreeMap<u32, String>> {
     Ok(text)
 }
 
-// ### separate_content
-// sepparation into chunks with size as selected
-// {sub-character, character, sentence, paragraph, section, page}
+
+// ### tokenize_content
+// Take content and tokenize it with a previoulsy downloaded tokenizer
 #[pyfunction]
-fn split_content() -> PyResult<()> {
-    // println!("split_content call");
-    Ok(())
+fn tokenize_content(input_text: &str) -> PyResult<Vec<u32>> {
+
+    let tokenized = content::tokenize::tokenize_content(input_text).map_err(|e| {
+        match e {
+            messages::errors::ContentError::ContentNotFound(msg) => {
+                    pyo3::exceptions::PyValueError::new_err(msg)
+                }
+            messages::errors::ContentError::UnsuccessfulExtraction(msg) => {
+                    pyo3::exceptions::PyIndexError::new_err(msg)
+                }
+            }
+        }
+    )?;
+
+    Ok(tokenized)
 }
 
 #[pymodule]
 fn molina(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(extract_content, m)?)?;
-    m.add_function(wrap_pyfunction!(split_content, m)?)?;
+    m.add_function(wrap_pyfunction!(tokenize_content, m)?)?;
     Ok(())
 }

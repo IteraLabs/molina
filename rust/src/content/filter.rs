@@ -4,7 +4,9 @@
 
 use lopdf::Object;
 
-pub static SIMPLE_FILTER: &[&str] = &["Length"];
+pub static SIMPLE_FILTER: &[&str] = &[
+    "Length",
+];
 
 pub static DEFAULT_FILTER: &[&str] = &[
     "Length",
@@ -43,7 +45,7 @@ pub fn filter_content(
     }
 
     if let Ok(result) = object.as_dict_mut() {
-        result.remove(b"Producer");
+        // result.remove(b"Producer");
         result.remove(b"ModDate");
         result.remove(b"Creator");
         result.remove(b"ProcSet");
