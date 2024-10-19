@@ -1,0 +1,3 @@
+llangchain-core
+langchain
+langchain-chroma>=0.1.2

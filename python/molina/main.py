@@ -1,4 +1,5 @@
-from molina import extract_content
+import molina
+# from langchain_chroma import Chroma
 
 def main():
 
@@ -13,20 +14,36 @@ def main():
     in_subfolder = "/conference_icml"
     in_file = "/basu24a.pdf"
     in_pdf = wd_folder + in_folder + in_subfolder + in_file
-    # in_tokenizer = wd_folder + "/models/Meta-Llama-3-8B-Instruct/"
 
-    # -- --------------------------------------------------------------------------- -- #
+    # -- ----------------------------------------------------------- Extract Content -- #
     # -- --------------------------------------------------------------------------- -- #
     
-    result_content = extract_content(input_file=in_pdf)
-
-    print(f"the resulting keys were: {result_content.keys()}")
+    result_content = molina.extract_content(input_file=in_pdf)
     print(result_content[1])
 
+    # -- ---------------------------------------------------------- Tokenize Content -- #
     # -- --------------------------------------------------------------------------- -- #
-    # -- --------------------------------------------------------------------------- -- #
-    # https://huggingface.co/docs/.../auto#transformers.AutoTokenizer.from_pretrained
 
+    tokenize_result = molina.tokenize_content(result_content[1])
+    print(tokenize_result) 
+
+    # -- ------------------------------------------------------------- Split Content -- #
+    # -- --------------------------------------------------------------------------- -- #
+    
+    # split_result = molina.split_content()
+    
+    # -- ------------------------------------------------------ Create Embeddings DB -- #
+    # -- --------------------------------------------------------------------------- -- #
+   
+    #  
+    
+    # -- ------------------------------------------------------ Simmilarity indexing -- #
+    # -- --------------------------------------------------------------------------- -- #
+    
+    # 
+
+    # -- --------------------------------------------------------- Output Formatting -- #
+    # -- --------------------------------------------------------------------------- -- #
 
 if __name__ == "__main__":
     main()
