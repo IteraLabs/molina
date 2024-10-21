@@ -1,49 +1,54 @@
-import molina
-# from langchain_chroma import Chroma
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+
+from content import documents, vector
+from generators import llama, gpt4all
 
 def main():
 
     """
-    !pip install transformers==4.33.0 accelerate==0.22.0 einops==0.6.1 \
-    langchain==0.0.300 xformers==0.0.21 bitsandbytes==0.41.1 \
-    sentence_transformers==2.2.2 chromadb==0.4.12
     """
-
+    
+    # -- -------------------------------------------- Extract/Load/Transform Content -- #
+    # -- --------------------------------------------------------------------------- -- #
+    
+    db_path = "knowledge/chroma"
+    docs_path = "knowledge/molina_compatible"
+    
     wd_folder = "/Users/franciscome/git/iteralabs/molina"
-    in_folder = "/knowledge"
-    in_subfolder = "/conference_icml"
-    in_file = "/basu24a.pdf"
-    in_pdf = wd_folder + in_folder + in_subfolder + in_file
+    in_knowledge = "/knowledge"
+    in_topic = "/molina_compatible"
+    in_folder = wd_folder + in_knowledge + in_topic
 
-    # -- ----------------------------------------------------------- Extract Content -- #
-    # -- --------------------------------------------------------------------------- -- #
-    
-    result_content = molina.extract_content(input_file=in_pdf)
-    print(result_content[1])
-
-    # -- ---------------------------------------------------------- Tokenize Content -- #
-    # -- --------------------------------------------------------------------------- -- #
-
-    tokenize_result = molina.tokenize_content(result_content[1])
-    print(tokenize_result) 
-
-    # -- ------------------------------------------------------------- Split Content -- #
-    # -- --------------------------------------------------------------------------- -- #
-    
-    # split_result = molina.split_content()
-    
-    # -- ------------------------------------------------------ Create Embeddings DB -- #
+    # -- -------------------------------------------- Extract/Load/Transform Content -- #
     # -- --------------------------------------------------------------------------- -- #
    
-    #  
-    
-    # -- ------------------------------------------------------ Simmilarity indexing -- #
-    # -- --------------------------------------------------------------------------- -- #
-    
-    # 
+    k_documents = documents.load_documents(data_path=docs_path)
+    ks_documents = documents.split_text(k_documents, c_size=1000, c_overlap=100)
 
+    # -- ---------------------------------------------------------- Create Documents -- #
+    # -- ---------------------------------------------------------- ---------------- -- #
+
+    chromadb = vector.create_vectordb(db_path=db_path,
+                           chunks=ks_documents, 
+                           embedding_model=gpt4all.embedding_model,
+                           verbose=True)
+
+    # -- ------------------------------------------------------ Create Embeddings DB -- #
+    # -- --------------------------------------------------------------------------- -- #
+
+    context_query = "large language models, llm"
+    
+    generation_query = "what is the perplexity of a Retrieval-based language model?"
+    
+    retrieved_texts = vector.search_vectordb(chromadb, context_query)   
+    llama_answer = llama.ask_query(retrieved_texts, generation_query)
+    a_specific = llama_answer['response'][-1]['generated_text'][-1]['content']
+    
     # -- --------------------------------------------------------- Output Formatting -- #
     # -- --------------------------------------------------------------------------- -- #
+    
+    print(f'\n agent answer: ', a_specific, '\n')
 
 if __name__ == "__main__":
     main()
