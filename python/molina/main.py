@@ -1,8 +1,35 @@
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 
-from content import documents, vector
-from generators import llama, gpt4all
+from content import vector
+from generators import llama
+
+def chat_with_user(chromadb, model_gen):
+    """
+    Chat interface for user interaction.
+    """
+
+    print("Welcome to the Chatbot! Type 'exit' to quit.")
+    
+    while True:
+        context_query = input("\nEnter context query: ")
+        if context_query.lower() == 'exit':
+            break
+        
+        generation_query = input("Enter your question: ")
+        if generation_query.lower() == 'exit':
+            break
+        
+        # Retrieve relevant texts based on the context query
+        retrieved_texts = vector.search_vectordb(chromadb, context_query)
+        
+        # Generate an answer based on the retrieved texts
+        llama_answer = llama.ask_query(retrieved_texts, generation_query, model_gen)
+        a_specific = llama_answer['response'][-1]['generated_text'][-1]['content']
+        
+        # Output the results
+        print(f'\nProvided Context:\n{retrieved_texts}\n')
+        print(f'Agent Answer:\n{a_specific}\n')
 
 def main():
 
@@ -15,40 +42,25 @@ def main():
     db_path = "knowledge/chroma"
     docs_path = "knowledge/molina_compatible"
     
-    wd_folder = "/Users/franciscome/git/iteralabs/molina"
-    in_knowledge = "/knowledge"
-    in_topic = "/molina_compatible"
-    in_folder = wd_folder + in_knowledge + in_topic
-
     # -- -------------------------------------------- Extract/Load/Transform Content -- #
     # -- --------------------------------------------------------------------------- -- #
    
-    k_documents = documents.load_documents(data_path=docs_path)
-    ks_documents = documents.split_text(k_documents, c_size=1000, c_overlap=100)
-
-    # -- ---------------------------------------------------------- Create Documents -- #
-    # -- ---------------------------------------------------------- ---------------- -- #
-
-    chromadb = vector.create_vectordb(db_path=db_path,
-                           chunks=ks_documents, 
-                           embedding_model=gpt4all.embedding_model,
-                           verbose=True)
+    chromadb = vector.setup_vectordb(db_path=db_path, docs_path=docs_path)
 
     # -- ------------------------------------------------------ Create Embeddings DB -- #
     # -- --------------------------------------------------------------------------- -- #
+   
+    model_gen = llama.generation_model()
 
-    context_query = "large language models, llm"
-    
-    generation_query = "what is the perplexity of a Retrieval-based language model?"
-    
-    retrieved_texts = vector.search_vectordb(chromadb, context_query)   
-    llama_answer = llama.ask_query(retrieved_texts, generation_query)
-    a_specific = llama_answer['response'][-1]['generated_text'][-1]['content']
-    
-    # -- --------------------------------------------------------- Output Formatting -- #
-    # -- --------------------------------------------------------------------------- -- #
-    
-    print(f'\n agent answer: ', a_specific, '\n')
+    """
+
+    context: augmented retrieval generation RAG retrieval-based LLM Language Models  
+    question: what are the major drawbacks of Retrival augmented generation RAG models ?
+
+    """
+
+    # Start chat with user
+    chat_with_user(chromadb, model_gen)
 
 if __name__ == "__main__":
     main()

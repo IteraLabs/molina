@@ -11,6 +11,14 @@ from torch import cuda, bfloat16
 def embeddings_model():
     """
 
+    # to access to the model, for the case of meta-llama
+    # You need to agree to share your contact information
+
+    # For my user the following has already been granted
+    # https://huggingface.co/meta-llama/Llama-3.2-3B
+
+    # consequently, a login is needed 
+
     """
     
     checkpoint = "meta-llama/Llama-3.2-3B-Instruct"
@@ -43,7 +51,10 @@ def generation_model():
 # ---------------------------------------------------------------------------------- -- #
 # ---------------------------------------------------------------------------------- -- #
 
-def ask_query(retrieved_texts, generation_query):
+def ask_query(retrieved_texts, generation_query, generation_model):
+    """
+
+    """
 
     # Prepare the messages for the text generation pipeline
     messages = [
@@ -63,14 +74,9 @@ def ask_query(retrieved_texts, generation_query):
     ]
 
     # Generate a response using the text generation pipeline
-    generator = generation_model()
-    response = generator(messages, max_new_tokens=256) #[-1]["generated_text"][-1]["content"]
-    # response = response[-1]['generated_text'][-1]['content']
-
-    #print(f"Query: \n\t{query}")
-    #print(f"Context: \n\t{retrieved_texts}")
-    #print(f"Answer: \n\t{response}")
-
+    # generator = generation_model()
+    response = generation_model(messages, max_new_tokens=128)
     r_answer = {'query': generation_query, 'context': retrieved_texts, 'response': response}
     
     return r_answer
+
