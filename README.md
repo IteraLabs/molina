@@ -27,8 +27,31 @@ Those seem very closely related to what a expert human research should also avoi
 
 ## Install
 
-## Example 1: Knowledge Summarization
+Clone the repo
+
+```shell
+git clone https://github.com/iteralabs/molina
+```
+
+Create a virtual environment and source into it.
+
+```shell
+python -m venv local_venv
+source local_venv/bin/activate
+```
+
+Install packages dependencies with *pip*
+
+
+```shell
+pip install -r requirements.txt
+```
+
+```shell
+python molina/main.py
+```
 
 ## Copyright disclaimer
 
 The purpose of this tool is not to promote or condone the unauthorized downloading or use of copyrighted materials. All users of this should only use legally obtained documents, self-archive documents and materials in their projects.
+
